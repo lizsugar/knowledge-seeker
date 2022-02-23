@@ -143,6 +143,17 @@ def browse_moment(season_id, episode_id, ms):
           'ms_range': CLOSE_SUBTITLE_SECS*1000 })
     subtitles = cur.fetchall()
     targs['subtitles'] = subtitles
+    
+    full_sub = ""
+    for row in subtitles:
+        if ms >= row['start_ms'] and ms <= row['end_ms']:
+            full_sub = full_sub + row['content'] + "\n"
+        elif row['snapshot_ms'] != "":
+            full_sub = full_sub + row['content'] + "\n"
+        else:
+            full_sub = full_sub + row['content'] + "\n"
+    targs['full_sub'] = full_sub
+
     targs['current_line'] = next(
         map(lambda row: strip_html(row['content']),
             filter(lambda row: ms >= row['start_ms'] and ms <= row['end_ms'],

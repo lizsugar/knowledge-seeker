@@ -25,6 +25,9 @@
 {% endif %}
 <a href="{{ url_for('webui.browse_season', season=season) }}">{{ season_name }}</a> |
 <a href="{{ url_for('webui.browse_episode', **slug_kwargs) }}">{{ episode_name }}</a>
+
+
+
 {% endblock %}
 
 {% block content %}
@@ -33,35 +36,47 @@
                 <img src="{{ url_for('clips.snapshot', ms=ms, **slug_kwargs) }}"
                      alt="right now">
         </div>
+
+<!-- 
+        TODO: TURN THIS INTO A TEXT FIELD
+        AND PASS THE TEXT FIELD TO THE JPEG+SUB BUTTON 
+        testing using: 
+
+        http://10.0.0.103:5000/sg1_s1/e22/1702075/
+
+
+        this is probably something too:
+        
+        https://towardsdatascience.com/using-python-flask-and-ajax-to-pass-information-between-the-client-and-server-90670c64d688
+--> 
+<br />
+<div>
         <div class="preview-links">
-                <a class="media-link jpeg"
+            <a class="media-link jpeg"
+               target="_blank"
+               href="{{ url_for('clips.snapshot', ms=ms, **slug_kwargs) }}">
+                    JPEG
+            </a>
+            <!--
+            <a class="media-link jpeg"
                    target="_blank"
-                   href="{{ url_for('clips.snapshot', ms=ms, **slug_kwargs) }}">
-                        JPEG
-                </a>
-                <a class="media-link jpeg"
-                   target="_blank"
-                   href="{{ url_for('clips.snapshot', ms=ms, btmb64=encode_text(current_line), **slug_kwargs) }}">
+                   href="{{ url_for('clips.snapshot', ms=ms, btmb64=encode_text(full_sub), **slug_kwargs) }}">
                         JPEG+Sub
-                </a>
+                </a> 
+            -->
         </div>
-        <div class="subtitle-list">
-{% for row in subtitles %}
-{% if ms >= row['start_ms'] and ms <= row['end_ms'] %}
-                <span class="subtitle now">{{ row['content']|safe }}</span>
-{% elif row['snapshot_ms'] is not none %}
-                <span class="subtitle">
-                        <a href="{{ url_for('webui.browse_moment', ms=row['snapshot_ms'], **slug_kwargs) }}">
-                                {{ row['content']|safe }}
-                        </a>
-                </span>
-{% else %}
-                <span class="subtitle">
-                        {{ row['content']|safe }}
-                </span>
-{% endif %}
-{% endfor %}
+
+        <form action="{{ url_for('clips.snapshot', ms=ms, **slug_kwargs) }}"  method="POST">
+
+        <div class="preview-links">                
+            <input type="submit" name="submit" value="JPEG + SUB">
         </div>
+
+        <textarea type="text" name="subbies" class="subtitle-list-box">
+{{ full_sub|safe }}
+        </textarea>
+</form>
+</div>
         <div class="nav-browser">
 {% for nav_ms in nav_list %}
 {% if nav_ms == ms %}

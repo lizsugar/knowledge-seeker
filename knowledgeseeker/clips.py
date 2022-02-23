@@ -4,6 +4,7 @@ import textwrap as tw
 from base64 import b64decode
 from datetime import timedelta
 from pathlib import Path
+from flask import request
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -19,7 +20,7 @@ TEXT_SPACING = 4
 JPEG_QUALITY = 85
 
 
-@bp.route('/<season>/<episode>/<int:ms>/pic')
+@bp.route('/<season>/<episode>/<int:ms>/pic', methods=['GET', 'POST'])
 @set_expires
 @match_episode
 def snapshot(season_id, episode_id, ms):
@@ -35,12 +36,19 @@ def snapshot(season_id, episode_id, ms):
     image = Image.open(io.BytesIO(res['png']))
 
     # Draw text if requested.
-    top_text = (b64decode(flask.request.args.get('topb64', ''))
-        .decode('ascii', 'ignore'))
-    bottom_text = (b64decode(flask.request.args.get('btmb64', ''))
-        .decode('ascii', 'ignore'))
-    if top_text != '' or bottom_text != '':
-        drawtext(image, top_text, bottom_text)
+    if request.method == 'POST':
+        top_text = ""
+        bottom_text = request.form['subbies']
+        print(bottom_text)
+        if top_text != '' or bottom_text != '':
+            drawtext(image, top_text, bottom_text)
+    else:
+        top_text = (b64decode(flask.request.args.get('topb64', ''))
+            .decode('ascii', 'ignore'))
+        bottom_text = (b64decode(flask.request.args.get('btmb64', ''))
+            .decode('ascii', 'ignore'))
+        if top_text != '' or bottom_text != '':
+            drawtext(image, top_text, bottom_text)
 
     # Return as compressed JPEG.
     res = io.BytesIO()
