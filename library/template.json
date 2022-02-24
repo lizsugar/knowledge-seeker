@@ -1,0 +1,20 @@
+[
+{% for season in seasons %}
+{ "seasonSlug": "{{seasons[season].slug}}",
+  "seasonName": "{{seasons[season].name}}",
+  "seasonIcon": "{{seasons[season].icon_path}}",
+
+  "episodes": [
+  {% for episode in seasons[season].episodes %}
+        { "episodeSlug": "{{seasons[season].episodes[episode].slug}}",
+          "episodeName": "{{seasons[season].episodes[episode].name}}",
+          "videoFile": "{{seasons[season].episodes[episode].video_filepath}}",
+          "subtitleFile": "{{seasons[season].episodes[episode].subtitle_filepath}}" },
+          
+  {%  endfor  %}
+        ] },
+
+  },
+
+{%  endfor %}
+]
