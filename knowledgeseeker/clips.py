@@ -85,14 +85,14 @@ def drawtext(image, top_text, bottom_text):
         return '\n'.join(tw.wrap(t, width=MAX_WIDTH))
 
     if top_text != '':
-        text = wrap(top_text[:MAX_LENGTH])
+        text = wrap(top_text)
         size = draw.multiline_textsize(text, font=font, spacing=TEXT_SPACING)
         pos = (round(image.width/2 - size[0]/2), round(TEXT_VMARGIN*image.height))
         draw.multiline_text(pos, text, font=font,
                             spacing=TEXT_SPACING, align='center')
 
     if bottom_text != '':
-        text = wrap(bottom_text[:MAX_LENGTH])
+        text = wrap(bottom_text)
         size = draw.multiline_textsize(text, font=font, spacing=TEXT_SPACING)
         pos = (round(image.width/2 - size[0]/2),
                image.height - round(TEXT_VMARGIN*image.height) - size[1])
