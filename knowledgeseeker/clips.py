@@ -81,7 +81,7 @@ def drawtext(image, top_text, bottom_text):
             size=flask.current_app.config.get('PIL_FONT_SIZE'))
         if font_path is not None else None)
     draw = ImageDraw.Draw(image)
-    def wrap(t):
+    def wrap(t): 
         return '\n'.join(tw.wrap(t, width=MAX_WIDTH))
 
     if top_text != '':
@@ -92,7 +92,9 @@ def drawtext(image, top_text, bottom_text):
                             spacing=TEXT_SPACING, align='center')
 
     if bottom_text != '':
-        text = wrap(bottom_text)
+        #text = wrap(bottom_text) # wrap() does not render newlines
+        text = bottom_text.replace("\r","") # clear out unneeded carriage returns
+
         size = draw.multiline_textsize(text, font=font, spacing=TEXT_SPACING)
         pos = (round(image.width/2 - size[0]/2),
                image.height - round(TEXT_VMARGIN*image.height) - size[1])
