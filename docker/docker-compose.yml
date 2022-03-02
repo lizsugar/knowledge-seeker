@@ -1,0 +1,8 @@
+version: '0.1'
+
+services:
+  knowledge-seeker:
+    image: knowledge-seeker:latest
+    #build: .
+    volumes:
+      - '/home/liz/projects/ks-test:/app'
